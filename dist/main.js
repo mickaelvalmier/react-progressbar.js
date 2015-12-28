@@ -1,9 +1,14 @@
-var React       = require('react');
-var isEqual     = require('lodash.isequal');
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var React = require('react');
+var isEqual = require('lodash.isequal');
 var ProgressBar = require('progressbar.js');
 
 var Shape = React.createClass({
-    getDefaultProps() {
+    displayName: 'Shape',
+    getDefaultProps: function getDefaultProps() {
         return {
             ShapeClass: null,
             options: {},
@@ -14,21 +19,18 @@ var Shape = React.createClass({
             containerClassName: '.progressbar-container'
         };
     },
-
-    getInitialState() {
+    getInitialState: function getInitialState() {
         return {
             shape: null
         };
     },
-
-    render() {
+    render: function render() {
         var style = this.props.containerStyle;
         var className = this.props.containerClassName;
 
-        return <div className={className} style={style} ref="progressBar"></div>;
+        return React.createElement('div', { className: className, style: style, ref: 'progressBar' });
     },
-
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
         if (!isEqual(this.props.options, nextProps.options)) {
             this._destroy();
             this._create(nextProps, this.props);
@@ -38,16 +40,13 @@ var Shape = React.createClass({
         this._animateProgress(nextProps.progress);
         this._setText(nextProps.text);
     },
-
-    componentDidMount() {
+    componentDidMount: function componentDidMount() {
         this._create(this.props);
     },
-
-    componentWillUnmount() {
-        this._destroy()
+    componentWillUnmount: function componentWillUnmount() {
+        this._destroy();
     },
-
-    _create(props, oldProps) {
+    _create: function _create(props, oldProps) {
         if (this.state.shape !== null) {
             throw new Error('Progressbar is already created');
         }
@@ -55,10 +54,7 @@ var Shape = React.createClass({
         // setState function is not used to prevent a new render cycle
         // This handling happens outside of React component's lifecycle
         var container = React.findDOMNode(this.refs.progressBar);
-        this.state.shape = new props.ShapeClass(
-            container,
-            props.options
-        );
+        this.state.shape = new props.ShapeClass(container, props.options);
 
         if (props.initialAnimate) {
             if (oldProps) {
@@ -72,23 +68,19 @@ var Shape = React.createClass({
 
         this._setText(props.text);
     },
-
-    _destroy() {
+    _destroy: function _destroy() {
         if (this.state.shape) {
             this.state.shape.destroy();
             this.state.shape = null;
         }
     },
-
-    _animateProgress(progress) {
+    _animateProgress: function _animateProgress(progress) {
         this.state.shape.animate(progress);
     },
-
-    _setProgress(progress) {
+    _setProgress: function _setProgress(progress) {
         this.state.shape.set(progress);
     },
-
-    _setText(text) {
+    _setText: function _setText(text) {
         if (text) {
             this.state.shape.setText(text);
         }
@@ -96,20 +88,23 @@ var Shape = React.createClass({
 });
 
 var Line = React.createClass({
-    render() {
-        return <Shape {...this.props} ShapeClass={ProgressBar.Line} />;
+    displayName: 'Line',
+    render: function render() {
+        return React.createElement(Shape, _extends({}, this.props, { ShapeClass: ProgressBar.Line }));
     }
 });
 
 var Circle = React.createClass({
-    render() {
-        return <Shape {...this.props} ShapeClass={ProgressBar.Circle} />;
+    displayName: 'Circle',
+    render: function render() {
+        return React.createElement(Shape, _extends({}, this.props, { ShapeClass: ProgressBar.Circle }));
     }
 });
 
 var SemiCircle = React.createClass({
-    render() {
-        return <Shape {...this.props} ShapeClass={ProgressBar.SemiCircle} />;
+    displayName: 'SemiCircle',
+    render: function render() {
+        return React.createElement(Shape, _extends({}, this.props, { ShapeClass: ProgressBar.SemiCircle }));
     }
 });
 
